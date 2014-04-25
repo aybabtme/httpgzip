@@ -33,6 +33,10 @@ type gzipResponseFlusher struct {
 }
 
 func (w gzipResponseFlusher) Write(b []byte) (int, error) {
+	if "" == w.Header().Get("Content-Type") {
+		// If no content type, apply sniffing algorithm to un-gzipped body.
+		w.Header().Set("Content-Type", http.DetectContentType(b))
+	}
 	return w.Writer.Write(b)
 }
 
@@ -47,6 +51,10 @@ type gzipResponseWriter struct {
 }
 
 func (w *gzipResponseWriter) Write(b []byte) (int, error) {
+	if "" == w.Header().Get("Content-Type") {
+		// If no content type, apply sniffing algorithm to un-gzipped body.
+		w.Header().Set("Content-Type", http.DetectContentType(b))
+	}
 	return w.gziper.Write(b)
 }
 
