@@ -98,7 +98,7 @@ func (g *GzipHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	gz := gzip.NewWriter(w)
 	defer func() {
 		if err := gz.Close(); err != nil {
-			g.OnError(fmt.Errorf("closing gzip writer, %v", err), w, r)
+			g.OnError(fmt.Errorf("closing gzip writer of request %s on %q, %v", r.Method, r.URL.Path, err), w, r)
 		}
 	}()
 
